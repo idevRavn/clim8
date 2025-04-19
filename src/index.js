@@ -40,3 +40,37 @@ async function fetchWeatherData(location) {
     console.error(error);
   }
 }
+
+const form = document.querySelector("#location-form");
+const input = document.querySelector("#location-input");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const location = input.value.trim();
+  if (!location) return;
+
+  const loading = document.getElementById("loading");
+  const display = document.getElementById("weather-display");
+
+  display.style.display = "none";
+  loading.style.display = "block";
+  form.querySelector("button").disabled = true;
+  input.disabled = true;
+
+  try {
+    const weather = await fetchWeatherData(location);
+    if (weather) {
+      displayWeather(weather);
+    } else {
+      throw new Error("No weather data");
+    }
+  } catch (err) {
+    console.error(err);
+  } finally {
+    display.style.display = "block";
+    loading.style.display = "none";
+    form.querySelector("button").disabled = false;
+    input.disabled = false;
+  }
+});
