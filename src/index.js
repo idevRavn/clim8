@@ -1,16 +1,50 @@
 import "./styles.css";
+import humidityIcon from "./images/humidity.svg";
+import windIcon from "./images/wind.svg";
+import clear from "./images/clear.svg";
+import cloudy from "./images/cloudy.svg";
+import fog from "./images/fog.svg";
+import mist from "./images/mist.svg";
+import hail from "./images/hail.svg";
 
 const API_KEY = process.env.API_KEY;
 
 function displayWeather(data) {
   const display = document.getElementById("weather-display");
+  console.log(data.weatherDescription);
+  const iconMap = {
+    Clear: clear,
+    Sunny: clear,
+    Cloudy: cloudy,
+    "Partially cloudy": cloudy,
+    Overcast: cloudy,
+    Fog: fog,
+    Mist: mist,
+    Hail: hail,
+  };
+  const mainIcon = iconMap[data.weatherDescription] || clear;
 
   display.innerHTML = `
-      <h2>Weather in ${data.location}</h2>
-      <p><strong>Temperature:</strong> ${data.temperature} °C</p>
-      <p><strong>Condition:</strong> ${data.weatherDescription}</p>
-      <p><strong>Humidity:</strong> ${data.humidity}%</p>
-      <p><strong>Wind Speed:</strong> ${data.windSpeed} km/h</p>
+        <div class="weather-header">
+    <h2 class="location">${data.location}</h2>
+    <p class="condition">${data.weatherDescription}</p>
+  </div>
+
+  <div class="weather-main">
+    <img src="${mainIcon}" alt="${data.weatherDescription}" class="weather-icon" />
+    <h1 class="temperature">${data.temperature}°C</h1>
+  </div>
+
+  <div class="weather-metrics">
+    <div class="metric">
+      <img src="${humidityIcon}" alt="Humidity" />
+      <p>${data.humidity}%</p>
+    </div>
+    <div class="metric">
+      <img src="${windIcon}" alt="Wind Speed" />
+      <p>${data.windSpeed} km/h</p>
+    </div>
+  </div>
     `;
 }
 
